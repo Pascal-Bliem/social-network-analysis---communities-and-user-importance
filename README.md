@@ -1,7 +1,7 @@
 # Social Network Analysis - Communities and User Importance
 
 ## Introduction
-In this project, I was interested in learning about structures within social networks. Among millions of users, can we identify communities? Can we find out which users have a special role or are especially important within these communities? Follow along and we will try to assess how important users are in a network of over 80000 Twitter users, based on their [in-degree centrality](https://en.wikipedia.org/wiki/Centrality#Degree_centrality) and [Page-Rank](https://en.wikipedia.org/wiki/PageRank) score. In the second part, we will try to identify communities within the Facebook data of 783 UC San Diego students, using the [Girvan-Newmann algorithm](https://en.wikipedia.org/wiki/Girvan%E2%80%93Newman_algorithm).
+In this project, I was interested in learning about structures within social networks. Among the users of a network, can we identify communities? Can we find out which users have a special role or are especially important within these communities? Follow along and we will try to assess how important users are in a network of over 80000 Twitter users, based on their [in-degree centrality](https://en.wikipedia.org/wiki/Centrality#Degree_centrality) and [Page-Rank](https://en.wikipedia.org/wiki/PageRank) score. In the second part, we will try to identify communities within the Facebook data of 783 UC San Diego students, using the [Girvan-Newmann algorithm](https://en.wikipedia.org/wiki/Girvan%E2%80%93Newman_algorithm).
 
 Of cource I'm not the first person asking these questions and there great libraries already out there, but since I worked on this project as part of an open-ended capstone of the MOOC specialization *Object Oriented Java Programming: Data Structures and Beyond* on [Coursera.org](https://www.coursera.org/specializations/java-object-oriented), I coded up the algorithms from scratch in Java and used [NetworkX](https://networkx.github.io/) in Python to test my code.
 
@@ -66,6 +66,31 @@ This class is for testing of both correctness and perfomrance. A test method is 
 This classes’ main method contains the actual analysis performed in this project. It loads the data, calls all analysis methods on it, and exports the results to files.
 
 ## Testing
+All tests were implemented in the [GraphTest.java](src/GraphTest.java) class.
+### Correctness
+To verify the correctness of the analysis (degree centrality, PageRank, strongly connected components, community detection), I created a variety of randomly generated example graphs with known properties with the Python [NetworkX](https://networkx.github.io/) package; a library for network analysis which allows to generate graphs and calculate their properties. The test examples can be found in the [data/TestGraphs/](data/TestGraphs/) directory, along with the [python code](data/TestGraphs/TestGraphMaker.ipynb) that created them. All tests were passed.
+### Performance
+You can also read this part with the actual code I used in this [Jupyter Notebook](PerformanceAnalysis.ipynb).
+
+The test examples can be found in the [data/TestPerformance/](data/TestPerformance/) directory, along with the [python code](data/TestGraphs/TestPerformanceMaker.ipynb) that created them. 
+
+Tests were performed on graphs ranging from 100 to 3000 vertices in steps of 100 (number of edges increases quadratically) and the execution time was recorded. Each case was tested 50 times to get better statistics. The Girvan-Newmann algorithm for community detection, however, was only tested for one iteration on the 100 to 1000 vertices graphs and only 3 times due to its much higher complexity.
+
+#### In-degree centrality
+This quantity is easy to calculate if edges are stored as adjacency lists. We just iterate through all vertices' adjacency lists and count +1 for every time a vertex has an incoming edge, then divide every value by V-1, where V is the number of vertices. Hence, the algorithm should run in O(E), where E is the number of edges. ![perfIDC](data/Figures/perfIDC.png)
+
+#### Page Rank
+The algorithm calculates how much "contribution" of PageRank each vertex gets over any incoming edge it has from another vertex so the complexity is O(E+V). ![perfPR](data/Figures/perfPR.png)
+
+#### Tarjan algorithm fro detecting strongly connected components
+The algorithm is based on a recursive depth-first-search, basically going along all paths in a component until it finds no more edges to go along, which means it found a full component. It's complexity is O(E+V). ![perfSCC](data/Figures/perfSCC.png)
+
+#### Girvan-Newman algorithm for detecting communities
+The algorithm removes edges with highest betweenness centrality to split apart communities. It first calculates the edge betweenness centrality for all edges, which means that it has to find all shortest paths from any vertex to any other vertex in the graph an see how many of these paths go through an edge. If there is more than one shortest path from one vertex to another, the paths have to be counted fractionally to an edges betweenness centrality. Finding shortest paths is done by a breath-first-search, complexity O(E+V), and it's done for every vertex combination, so finding all shortest paths should be of complexity O((E+V)$^{2}$). That is for one iteration (we are only looking at one iteration here), so it looks somewhat quadratic. For all possible iterations, meaning removing all eges it would look qubic, and for a realistic case where we want to find a certain number of communities, probably somewhere in between quadratic and cubic big O. ![perfGN](data/Figures/perfGN.png)
+
+Looking at all these algorithms in comparison, it becomes clear that the community detection is the bottle neck in this analysis: ![perfAll](data/Figures/perfAll.png)
 
 ## Acknowledgement
 
+I'd like to thank the instructors of this MOOC, Christine Alvarado, Mia Minnes, and Leo Porter, for putting together a really interesting specialization. I learned a lot and had quite some fun.
+Also thanks to whoever read this till the very end :)
