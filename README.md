@@ -78,21 +78,26 @@ Tests were performed on graphs ranging from 100 to 3000 vertices in steps of 100
 
 #### In-degree centrality
 This quantity is easy to calculate if edges are stored as adjacency lists. We just iterate through all vertices' adjacency lists and count +1 for every time a vertex has an incoming edge, then divide every value by V-1, where V is the number of vertices. Hence, the algorithm should run in O(E), where E is the number of edges. 
+
 ![perfIDC](data/Figures/perfIDC.png)
 
 #### Page Rank
 The algorithm calculates how much "contribution" of PageRank each vertex gets over any incoming edge it has from another vertex so the complexity is O(E+V). 
+
 ![perfPR](data/Figures/perfPR.png)
 
 #### Tarjan algorithm fro detecting strongly connected components
 The algorithm is based on a recursive depth-first-search, basically going along all paths in a component until it finds no more edges to go along, which means it found a full component. It's complexity is O(E+V). 
+
 ![perfSCC](data/Figures/perfSCC.png)
 
 #### Girvan-Newman algorithm for detecting communities
 The algorithm removes edges with highest betweenness centrality to split apart communities. It first calculates the edge betweenness centrality for all edges, which means that it has to find all shortest paths from any vertex to any other vertex in the graph an see how many of these paths go through an edge. If there is more than one shortest path from one vertex to another, the paths have to be counted fractionally to an edges betweenness centrality. Finding shortest paths is done by a breath-first-search, complexity O(E+V), and it's done for every vertex combination, so finding all shortest paths should be of complexity O((E+V)$^{2}$). That is for one iteration (we are only looking at one iteration here), so it looks somewhat quadratic. For all possible iterations, meaning removing all eges it would look qubic, and for a realistic case where we want to find a certain number of communities, probably somewhere in between quadratic and cubic big O. 
+
 ![perfGN](data/Figures/perfGN.png)
 
 Looking at all these algorithms in comparison, it becomes clear that the community detection is the bottle neck in this analysis: 
+
 ![perfAll](data/Figures/perfAll.png)
 
 ## Acknowledgement
