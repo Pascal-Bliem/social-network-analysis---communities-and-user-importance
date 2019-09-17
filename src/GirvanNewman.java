@@ -315,7 +315,4 @@ public class GirvanNewman {
 	public HashMap<Integer, HashMap<Integer, Double> > getEBC(){
 		return EBCs;
 	}
-	
-	// TODO 2. remove edge(s) with highest
-	
 }
