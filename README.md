@@ -34,7 +34,7 @@ The anonymous Facebook data we have here is is a "snapshot" of the network of st
 Let's visualize the original network. We can see that most people seem to have many connections with many other people but there are also some users on the outskirts of this network who are connected to only a few other users. 
 ![origFB](data/Figures/origFB.png)
 Now let's look at the network after running the Girvan-Newmann algorithm and identifying 30 communities (by removing 451 edges). We can also calculate the degree centrality for each user/vertex and use it for color-mapping.
-![comsFB](data/Figures/comsFB.png)
+![comFB](data/Figures/comsFB.png)
 
 We can see that the Girvan-Newmann algorithm identified two very large communities and a couple of smaller communities. Within the larger communities, there are several users that have a high degree centrality, suggesting that they are more important or  influential within these communities. Since the data we use here is anonymized, we can only speculate about the nature of these communities. Maybe they represent student unions, study and sport clubs, or people in different degree programs. 
 
